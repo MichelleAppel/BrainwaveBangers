@@ -37,3 +37,20 @@ def compute_features(window):
     valence_raw = np.log(alpha[f3] + eps) - np.log(alpha[f4] + eps)
 
     return float(arousal_raw), float(valence_raw), artifact
+
+def bandpower_1d(x, fs, fmin, fmax):
+    f, Pxx = welch(x, fs=fs, nperseg=min(len(x), 256))
+    idx = (f >= fmin) & (f <= fmax)
+    return float(Pxx[idx].mean()) if np.any(idx) else 0.0
+
+def compute_bandpowers(window):
+    """
+    Returns dict of mean bandpowers over BAND_PICKS
+    e.g. {"delta": 0.12, "theta": 0.08, "alpha": 0.05, "beta": 0.03, "gamma": 0.01}
+    """
+    pick_idx = [CH_NAMES.index(n) for n in BAND_PICKS]
+    bands = {}
+    for name, (fmin, fmax) in BAND_RANGES.items():
+        vals = [bandpower_1d(window[i], FS, fmin, fmax) for i in pick_idx]
+        bands[name] = float(np.mean(vals))
+    return bands

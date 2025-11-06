@@ -18,7 +18,11 @@ class BOOptimizer(BaseOptimizer):
         self.best_y = -np.inf
         if HAVE_SKOPT:
             space = [Real(lo, hi, name=n) for (lo,hi), n in zip(self.bounds, ["drums","pad","tempo","grain"])]
-            self.opt = SkoptOptimizer(space, base_estimator="GP", acq_func="EI", random_state=seed, noise="gaussian")
+            self.opt = SkoptOptimizer(
+                space, base_estimator="GP", acq_func="EI",
+                acq_func_kwargs={"xi": 0.05},   # was implicit default ~0.01–0.1
+                random_state=seed, noise="gaussian"
+            )
         else:
             self.opt = None
         self._last_proposed = None
