@@ -10,8 +10,13 @@ A real-time optimizer (SPSA or Bayesian Optimization) adjusts musical parameters
 
 Use one of the following commands:
 
+```bash
 python main.py --optimizer spsa
+```
+
+```bash
 python main.py --optimizer bo
+```
 
 If no EEG device is found, a mock source simulates signals.
 
