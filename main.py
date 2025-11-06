@@ -10,7 +10,7 @@ from config import (
     BASELINE_SEC, EMA_ALPHA,
     ADAPT_ALPHA, TARGET, DEFAULT_OPTIMIZER
 )
-from util import ema, distance, squash_tanh
+from util import bandpass_filter, ema, distance, squash_tanh
 from features import compute_features
 from plotting import LivePlot
 from sources import UnicornSource, MockEEGSource, mock_av_response, HAVE_UNICORN
@@ -72,7 +72,9 @@ def run(optimizer_name: str):
                 if hop_accum == N_HOP:
                     idx = np.arange(write_idx - N_WIN, write_idx) % N_WIN
                     win = buf[:, idx]
-                    a_raw, v_raw, _ = compute_features(win)
+                    # win: np.ndarray [n_channels, n_samples]
+                    win_filt = bandpass_filter(win, FS, 1, 20)
+                    a_raw, v_raw, art = compute_features(win_filt)
                     A_hist.append(a_raw)
                     V_hist.append(v_raw)
                     hop_accum = 0

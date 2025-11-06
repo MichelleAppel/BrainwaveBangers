@@ -28,13 +28,15 @@ def compute_features(window):
     theta = np.array([bandpower_1d(window[i], FS, *THETA) for i in range(len(CH_NAMES))])
     beta  = np.array([bandpower_1d(window[i], FS, *BETA ) for i in range(len(CH_NAMES))])
 
-    pick = [CH_NAMES.index(n) for n in ["F3","F4","Cz"]]
+    pick = [CH_NAMES.index(n) for n in ["PO7","PO8","Cz"]]
+
     a_bar = alpha[pick].mean(); t_bar = theta[pick].mean(); b_bar = beta[pick].mean()
 
     eps = 1e-12
     arousal_raw = np.log(b_bar + eps) - np.log(a_bar + t_bar + eps)
     f3 = CH_NAMES.index("F3"); f4 = CH_NAMES.index("F4")
-    valence_raw = np.log(alpha[f3] + eps) - np.log(alpha[f4] + eps)
+    fp1 = CH_NAMES.index("FP1"); fp2 = CH_NAMES.index("FP2")
+    valence_raw = (np.log(alpha[f3] + eps) - np.log(alpha[f4] + eps) + (np.log(alpha[fp1] + eps) - np.log(alpha[fp2] + eps)))/2.0
 
     return float(arousal_raw), float(valence_raw), artifact
 

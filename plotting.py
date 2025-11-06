@@ -32,15 +32,15 @@ class LivePlot:
         self.ax_top, self.ax_mid = self.axs[0], self.axs[1]
 
         # --- A/V subplot
-        (self.lA,) = self.ax_top.plot([], [], linewidth=1.3, label="Arousal (avg)")
-        (self.lV,) = self.ax_top.plot([], [], linewidth=1.3, label="Valence (avg)")
-        (self.lA_sm,) = self.ax_top.plot([], [], linestyle="--", linewidth=2.0, alpha=0.8, label="Arousal (sm)")
-        (self.lV_sm,) = self.ax_top.plot([], [], linestyle="--", linewidth=2.0, alpha=0.8, label="Valence (sm)")
+        # (self.lA,) = self.ax_top.plot([], [], linewidth=1.3, label="Arousal (avg)")
+        # (self.lV,) = self.ax_top.plot([], [], linewidth=1.3, label="Valence (avg)")
+        (self.lA_sm,) = self.ax_top.plot([], [], linewidth=2.0, alpha=0.8, label="Arousal (sm)", color="tab:red")
+        (self.lV_sm,) = self.ax_top.plot([], [], linewidth=2.0, alpha=0.8, label="Valence (sm)", color="tab:green")
 
         if self.A_star is not None:
-            self.ax_top.axhline(self.A_star, linestyle="--", linewidth=1.0, color="tab:green", alpha=0.6, label="A* target")
+            self.ax_top.axhline(self.A_star, linestyle="--", linewidth=1.0, color="tab:red", alpha=0.6, label="A* target")
         if self.V_star is not None:
-            self.ax_top.axhline(self.V_star, linestyle="--", linewidth=1.0, color="tab:red", alpha=0.6, label="V* target")
+            self.ax_top.axhline(self.V_star, linestyle="--", linewidth=1.0, color="tab:green", alpha=0.6, label="V* target")
 
         self.ax_top.set_ylabel("Arousal / Valence")
         self.ax_top.set_ylim(0.0, 1.0)
@@ -101,8 +101,8 @@ class LivePlot:
             self.param_hist[k].append(params_mean.get(k, np.nan))
 
         # Update A/V raw + smoothed
-        self.lA.set_data(self.times, self.A_vals)
-        self.lV.set_data(self.times, self.V_vals)
+        # self.lA.set_data(self.times, self.A_vals)
+        # self.lV.set_data(self.times, self.V_vals)
         self.lA_sm.set_data(self.times, self._smooth(self.A_vals, self.smooth_window))
         self.lV_sm.set_data(self.times, self._smooth(self.V_vals, self.smooth_window))
 
